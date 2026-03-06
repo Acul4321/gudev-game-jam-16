@@ -10,8 +10,8 @@ on:
 
 env:
   GODOT_VERSION: 4.6.1
-  # EXPORT_NAME: duck
-  PROJECT_PATH: duck
+  # EXPORT_NAME: time
+  PROJECT_PATH: time
 
 jobs:
   export-web:
