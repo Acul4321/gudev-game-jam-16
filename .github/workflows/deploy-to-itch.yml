@@ -1,0 +1,57 @@
+# Copied from: https://github.com/abarichello/godot-ci/issues/99.
+
+name: "godot-ci itch"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+env:
+  GODOT_VERSION: 4.6.1
+  # EXPORT_NAME: duck
+  PROJECT_PATH: duck
+
+jobs:
+  export-web:
+    permissions:
+      contents: write
+    name: Web Export
+    runs-on: ubuntu-22.04
+    container:
+      image: barichello/godot-ci:4.6.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates/
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Web Build
+        run: |
+          mkdir -v -p build/web
+          EXPORT_DIR="$(readlink -f build)"
+          cd $PROJECT_PATH
+          godot --headless --verbose --export-release "Web" "$EXPORT_DIR/web/index.html"
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web
+          path: build/web
+      - name: Install Butler
+        run: |
+          apt-get update && apt-get install -y curl unzip
+          curl -L -o butler.zip https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default 
+          unzip -q butler.zip
+          mv butler /usr/local/bin/butler
+          chmod +x /usr/local/bin/butler
+      - name: Butler Upload
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+          ITCH_GAME: ${{ secrets.ITCHIO_GAME }}
+          ITCH_USER: ${{ secrets.ITCHIO_USERNAME }}
+        run: |
+          butler push build/web ${ITCH_USER}/${ITCH_GAME}:web
