@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bektemtaxqknj"]
+
+[ext_resource type="Script" uid="uid://beb5mk5f27ylv" path="res://manuscript.gd" id="1_clbb6"]
+[ext_resource type="Texture2D" uid="uid://8wnhe6wj50x4" path="res://paper.png" id="2_51l5a"]
+
+[node name="Manuscript" type="Node2D" unique_id=1498770907]
+position = Vector2(372, 82)
+script = ExtResource("1_clbb6")
+
+[node name="PaperBG" type="TextureRect" parent="." unique_id=1236920414]
+offset_right = 467.0
+offset_bottom = 529.31793
+texture = ExtResource("2_51l5a")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="ScribbleLine" type="Line2D" parent="." unique_id=190755950]
+default_color = Color(0, 0, 0, 1)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
