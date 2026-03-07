@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://beb5mk5f27ylv" path="res://manuscript.gd" id="1_clbb6"]
 [ext_resource type="Texture2D" uid="uid://8wnhe6wj50x4" path="res://paper.png" id="2_51l5a"]
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_51l5a"]
+load_path = "res://.godot/imported/stamp.png-18ec38885bd9df60d0a69d163f4f89ff.ctex"
+
 [node name="Manuscript" type="Node2D" unique_id=1498770907]
 position = Vector2(372, 82)
 script = ExtResource("1_clbb6")
@@ -19,3 +22,8 @@ default_color = Color(0, 0, 0, 1)
 joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
+
+[node name="StampAnim" type="Sprite2D" parent="." unique_id=413301802]
+visible = false
+position = Vector2(320, 95)
+texture = SubResource("CompressedTexture2D_51l5a")

@@ -2,7 +2,10 @@ extends Node2D
 
 const GRID_W: int = 10
 const GRID_H: int = 10
-const FILL_THRESHOLD: float = 0.65
+const FILL_THRESHOLD: float = 0.50
+
+@export var pile_position: Vector2 = Vector2(-300, 200)
+const PILE_SCALE: float = 0.4
 
 @onready var paper_bg: TextureRect = $PaperBG
 @onready var scribble_line: Line2D = $ScribbleLine
@@ -108,14 +111,75 @@ var pages: int = 0
 
 func _complete_page():
 	pages += 1
-	# Remove all Line2D children (the strokes)
-	for child in get_children():
-		if child is Line2D:
-			child.queue_free()
-	current_line = null
-	_reset_grid()
 	is_drawing = false
 	last_fill_pos = Vector2(-1, -1)
+	
+	# --- Snapshot the current page ---
+	var snapshot = Node2D.new()
+	
+	# Use Sprite2D, NOT TextureRect — it actually scales with the parent
+	var paper_copy = Sprite2D.new()
+	paper_copy.texture = paper_bg.texture
+	paper_copy.centered = false
+	# Match the TextureRect's display size, not the image's native size
+	var tex_size = paper_bg.texture.get_size()
+	paper_copy.scale = paper_size / tex_size
+	snapshot.add_child(paper_copy)
+	
+	# Move all Line2D strokes into the snapshot
+	for child in get_children():
+		if child is Line2D:
+			remove_child(child)
+			snapshot.add_child(child)
+	
+	current_line = null
+	
+	# Add snapshot as sibling (so it's outside the manuscript)
+	get_parent().add_child(snapshot)
+	snapshot.global_position = global_position
+	
+	# --- Stamp, then fly to pile ---
+	stamp.visible = true
+	stamp.scale = Vector2(1.8, 1.8)
+	stamp.modulate = Color(1, 1, 1, 1)
+	
+	var tween = create_tween()
+	# Stamp slam
+	tween.tween_property(stamp, "scale", Vector2(1.0, 1.0), 0.15) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tween.tween_interval(0.3)
+	tween.tween_property(stamp, "modulate", Color(1, 1, 1, 0), 0.2)
+	tween.tween_callback(func(): stamp.visible = false)
+	
+	# While stamp fades, fly the snapshot to the pile
+	# Slight random rotation so the pile looks messy
+	var pile_tween = create_tween().set_parallel(true)
+	var target_pos = pile_position + Vector2(randf_range(-10, 10), randf_range(-10, 10))
+	var target_rot = randf_range(-0.15, 0.15)  # radians, slight tilt
+	
+	pile_tween.tween_property(snapshot, "global_position", global_position + target_pos, 0.4) \
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
+	pile_tween.tween_property(snapshot, "scale", Vector2(PILE_SCALE, PILE_SCALE), 0.4)
+	pile_tween.tween_property(snapshot, "rotation", target_rot, 0.4)
+	
+	# --- Reset for next page ---
+	_reset_grid()
 	page_completed.emit(pages)
 	print("PAGE %d COMPLETE!" % pages)
+	
+@onready var stamp: Sprite2D = $StampAnim
+
+func _play_stamp():
+	stamp.visible = true
+	stamp.scale = Vector2(1.8, 1.8)
+	stamp.modulate = Color(1, 1, 1, 1)
+
+	var tween = create_tween()
+	# Slam in
+	tween.tween_property(stamp, "scale", Vector2(1.0, 1.0), 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	# Hold for a moment
+	tween.tween_interval(0.4)
+	# Fade out
+	tween.tween_property(stamp, "modulate", Color(1, 1, 1, 0), 0.3)
+	tween.tween_callback(func(): stamp.visible = false)
 	
