@@ -1,19 +1,19 @@
 [gd_scene format=3 uid="uid://bektemtaxqknj"]
 
-[ext_resource type="Script" uid="uid://beb5mk5f27ylv" path="res://manuscript.gd" id="1_clbb6"]
-[ext_resource type="Texture2D" uid="uid://8wnhe6wj50x4" path="res://paper.png" id="2_51l5a"]
+[ext_resource type="Script" uid="uid://beb5mk5f27ylv" path="res://manuscript/manuscript.gd" id="1_j107c"]
+[ext_resource type="Texture2D" uid="uid://8wnhe6wj50x4" path="res://manuscript/paper.png" id="2_uyrrx"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_51l5a"]
 load_path = "res://.godot/imported/stamp.png-18ec38885bd9df60d0a69d163f4f89ff.ctex"
 
 [node name="Manuscript" type="Node2D" unique_id=1498770907]
 position = Vector2(372, 82)
-script = ExtResource("1_clbb6")
+script = ExtResource("1_j107c")
 
 [node name="PaperBG" type="TextureRect" parent="." unique_id=1236920414]
 offset_right = 467.0
 offset_bottom = 529.31793
-texture = ExtResource("2_51l5a")
+texture = ExtResource("2_uyrrx")
 expand_mode = 1
 metadata/_edit_use_anchors_ = true
 
