@@ -7,8 +7,11 @@ enum HandState {
 }
 
 signal hand_state_changed(old_state: HandState, new_state: HandState)
+signal distraction_force_open_changed(is_forced_open: bool)
 
-var hand_state: HandState = HandState.OPEN
+var hand_state: HandState = HandState.WRITE
+var _forced_open_count: int = 0
+var _state_before_forced_open: HandState = HandState.WRITE
 
 
 func set_hand_state(new_state: HandState) -> void:
@@ -63,6 +66,27 @@ func hand_state_to_string(state: HandState = hand_state) -> String:
 		_:
 			return "UNKNOWN"
 
+func begin_distraction_force_open() -> void:
+	if _forced_open_count == 0:
+		_state_before_forced_open = hand_state
+		set_hand_open()
+		distraction_force_open_changed.emit(true)
+	_forced_open_count += 1
+
+func end_distraction_force_open() -> void:
+	if _forced_open_count <= 0:
+		return
+
+	_forced_open_count -= 1
+	if _forced_open_count > 0:
+		return
+
+	if hand_state == HandState.OPEN or hand_state == HandState.GRAB:
+		set_hand_state(_state_before_forced_open)
+	distraction_force_open_changed.emit(false)
+
+func is_forced_open_active() -> bool:
+	return _forced_open_count > 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

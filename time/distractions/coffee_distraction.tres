@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="DistractionResource" format=3 uid="uid://cpqghlmvtb034"]
+
+[ext_resource type="Script" uid="uid://cugrxakbx6pl4" path="res://distractions/distraction_resource.gd" id="1_2ohwq"]
+[ext_resource type="Texture2D" uid="uid://bx6tlxw62wg1x" path="res://distractions/assets/coffee.png" id="2_gkxp3"]
+[ext_resource type="Texture2D" uid="uid://c64t4q872x7fn" path="res://distractions/assets/coffeespilt.png" id="3_enybl"]
+
+[resource]
+script = ExtResource("1_2ohwq")
+name = "Coffee"
+beforeActiveSprite = ExtResource("2_gkxp3")
+afterActiveSprite = ExtResource("3_enybl")
+grabbingSprite = ExtResource("3_enybl")
+spawnChancePercent = 90.0
+scaleFactor = 0.4
+beforeActiveScaleFactor = 0.3
+afterActiveScaleFactor = 0.45
+grabbingScaleFactor = 0.45
