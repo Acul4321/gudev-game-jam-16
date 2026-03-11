@@ -18,6 +18,7 @@ var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 
 func _ready() -> void:
+	Music.play(&"Time Loop In Game", true, 0.0)
 	_rng.randomize()
 	_schedule_next_spawn()
 
