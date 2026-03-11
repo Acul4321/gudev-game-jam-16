@@ -1,11 +1,16 @@
 [gd_scene format=3 uid="uid://c1lojw0uh2ou4"]
 
+[ext_resource type="Script" uid="uid://wn86k2ccc14f" path="res://main/main.gd" id="1_47fuf"]
 [ext_resource type="PackedScene" uid="uid://bektemtaxqknj" path="res://manuscript/manuscript.tscn" id="1_53q0u"]
 [ext_resource type="PackedScene" uid="uid://62nsvu2nthbi" path="res://hand/hand.tscn" id="2_pjrb6"]
 
 [node name="Main" type="Node2D" unique_id=2132668939]
+script = ExtResource("1_47fuf")
 
 [node name="Manuscript" parent="." unique_id=1498770907 instance=ExtResource("1_53q0u")]
+
+[node name="Distractions" type="Node2D" parent="." unique_id=1589002880]
+unique_name_in_owner = true
 
 [node name="Hand" parent="." unique_id=1640679499 instance=ExtResource("2_pjrb6")]
 position = Vector2(356.53345, 328.64398)

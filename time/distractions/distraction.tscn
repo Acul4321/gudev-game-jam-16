@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://0mfg6grdcmi"]
+
+[ext_resource type="Script" uid="uid://d2n3drr372utt" path="res://distractions/distraction.gd" id="1_6i8w8"]
+[ext_resource type="Resource" uid="uid://cpqghlmvtb034" path="res://distractions/coffee_distraction.tres" id="1_awvj2"]
+[ext_resource type="Texture2D" uid="uid://bx6tlxw62wg1x" path="res://distractions/assets/coffee.png" id="2_pb5u8"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1um1f"]
+radius = 52.0
+
+[node name="Distraction" type="Area2D" unique_id=1328952619]
+script = ExtResource("1_6i8w8")
+distractionResource = ExtResource("1_awvj2")
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1205566581]
+modulate = Color(1, 1, 1, 0.75)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_pb5u8")
+
+[node name="GrabArea" type="CollisionShape2D" parent="." unique_id=2074996684]
+shape = SubResource("CircleShape2D_1um1f")

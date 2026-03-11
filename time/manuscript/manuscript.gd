@@ -148,9 +148,9 @@ func _complete_page():
 	
 	current_line = null
 	
-	# Add snapshot as sibling (so it's outside the manuscript)
-	get_parent().add_child(snapshot)
-	snapshot.global_position = global_position
+	# Keep completed pages layered inside the manuscript node.
+	add_child(snapshot)
+	snapshot.position = Vector2.ZERO
 	
 	# --- Stamp, then fly to pile ---
 	stamp.visible = true
