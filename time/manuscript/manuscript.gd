@@ -25,6 +25,8 @@ func _ready():
 	paper_size = paper_bg.size
 	cell_size = Vector2(paper_size.x / GRID_W, paper_size.y / GRID_H)
 	_reset_grid()
+	if not Game.hand_state_changed.is_connected(_on_hand_state_changed):
+		Game.hand_state_changed.connect(_on_hand_state_changed)
 
 func _reset_grid():
 	grid = []
@@ -41,6 +43,8 @@ var current_line: Line2D = null
 func _input(event: InputEvent):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
+			if not Game.can_write():
+				return
 			var local_pos = to_local(event.global_position)
 			if _is_on_paper(local_pos):
 				is_drawing = true
@@ -56,10 +60,20 @@ func _input(event: InputEvent):
 			last_fill_pos = Vector2(-1, -1)
 
 	if event is InputEventMouseMotion and is_drawing:
+		if not Game.can_write():
+			is_drawing = false
+			last_fill_pos = Vector2(-1, -1)
+			return
 		var local_pos = to_local(event.global_position)
 		if _is_on_paper(local_pos) and current_line:
 			current_line.add_point(local_pos + _wobble())
 			_fill_cells_along(local_pos)
+
+
+func _on_hand_state_changed(_old_state: int, new_state: int) -> void:
+	if new_state != Game.HandState.WRITE:
+		is_drawing = false
+		last_fill_pos = Vector2(-1, -1)
 
 func _is_on_paper(local_pos: Vector2) -> bool:
 	var paper_rect = Rect2(Vector2.ZERO, paper_size)

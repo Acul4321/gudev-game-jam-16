@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://c1lojw0uh2ou4"]
+
+[ext_resource type="PackedScene" uid="uid://bektemtaxqknj" path="res://manuscript/manuscript.tscn" id="1_53q0u"]
+[ext_resource type="PackedScene" uid="uid://62nsvu2nthbi" path="res://hand/hand.tscn" id="2_pjrb6"]
+
+[node name="Main" type="Node2D" unique_id=2132668939]
+
+[node name="Manuscript" parent="." unique_id=1498770907 instance=ExtResource("1_53q0u")]
+
+[node name="Hand" parent="." unique_id=1640679499 instance=ExtResource("2_pjrb6")]
+position = Vector2(356.53345, 328.64398)

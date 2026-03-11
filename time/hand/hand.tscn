@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://62nsvu2nthbi"]
+
+[ext_resource type="Texture2D" uid="uid://jnpmrvuksns8" path="res://hand/drawinghand.png" id="1_nrt1y"]
+[ext_resource type="Script" uid="uid://d0p312laarc45" path="res://hand/hand.gd" id="1_plmdu"]
+[ext_resource type="Texture2D" uid="uid://bic0gmpbrmdga" path="res://hand/openhand.png" id="2_pb6ri"]
+[ext_resource type="Texture2D" uid="uid://dn34efrlcq6jp" path="res://hand/grabbinghand.png" id="3_65p8w"]
+
+[node name="Hand" type="Node2D" unique_id=1640679499]
+script = ExtResource("1_plmdu")
+
+[node name="writeVisual" type="Sprite2D" parent="." unique_id=1349022482]
+unique_name_in_owner = true
+visible = false
+scale = Vector2(0.14, 0.14)
+texture = ExtResource("1_nrt1y")
+offset = Vector2(635.915, 320.48)
+
+[node name="openVisual" type="Sprite2D" parent="." unique_id=662699828]
+unique_name_in_owner = true
+scale = Vector2(0.14, 0.14)
+texture = ExtResource("2_pb6ri")
+offset = Vector2(0, 280.245)
+
+[node name="grabVisual" type="Sprite2D" parent="." unique_id=1200917918]
+unique_name_in_owner = true
+scale = Vector2(0.14, 0.14)
+texture = ExtResource("3_65p8w")
+offset = Vector2(0, 280.245)

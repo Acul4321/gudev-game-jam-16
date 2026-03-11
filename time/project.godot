@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="time"
-run/main_scene="uid://bektemtaxqknj"
+run/main_scene="uid://c1lojw0uh2ou4"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Game="*uid://dhhpitrq87eol"
 
 [physics]
 
