@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="DistractionResource" format=3 uid="uid://c5nyltjhff5qt"]
+
+[ext_resource type="Script" uid="uid://cugrxakbx6pl4" path="res://distractions/distraction_resource.gd" id="1_4ptds"]
+[ext_resource type="Texture2D" uid="uid://cm8b48h6ieyvv" path="res://distractions/assets/catheld.png" id="1_uow5y"]
+[ext_resource type="Texture2D" uid="uid://dga8lc7a3nall" path="res://distractions/assets/catlyingdown.png" id="2_uvlhs"]
+
+[resource]
+script = ExtResource("1_4ptds")
+name = "Cat"
+beforeActiveSprite = ExtResource("2_uvlhs")
+afterActiveSprite = ExtResource("2_uvlhs")
+grabbingSprite = ExtResource("1_uow5y")
+spawnChancePercent = 10.0
+scaleFactor = 0.5
+beforeActiveScaleFactor = 0.4
+afterActiveScaleFactor = 0.4
+grabbingScaleFactor = 0.6

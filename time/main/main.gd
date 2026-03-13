@@ -1,0 +1,80 @@
+extends Node2D
+
+@export var distraction_scene: PackedScene = preload("res://distractions/distraction.tscn")
+@export var distraction_resources: Array[DistractionResource] = [
+	preload("res://distractions/coffee_distraction.tres"),
+	preload("res://distractions/cat_distraction.tres"),
+]
+@export var min_spawn_interval: float = 4.0
+@export var max_spawn_interval: float = 8.0
+@export var max_active_distractions: int = 2
+@export var spawn_margin: float = 80.0
+@export var min_spawn_rotation_degrees: float = -180.0
+@export var max_spawn_rotation_degrees: float = 180.0
+
+@onready var distractions_root: Node2D = $Distractions
+
+var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+
+
+func _ready() -> void:
+	Music.play(&"Time Loop In Game", true, 0.0)
+	_rng.randomize()
+	_schedule_next_spawn()
+
+
+func _schedule_next_spawn() -> void:
+	var delay: float = _rng.randf_range(min_spawn_interval, max_spawn_interval)
+	var timer := get_tree().create_timer(delay)
+	timer.timeout.connect(_try_spawn_distraction)
+
+
+func _try_spawn_distraction() -> void:
+	if not is_instance_valid(distraction_scene):
+		return
+
+	if get_tree().get_nodes_in_group("distractions").size() >= max_active_distractions:
+		_schedule_next_spawn()
+		return
+
+	var distraction := distraction_scene.instantiate() as Node2D
+	var picked_resource: DistractionResource = _pick_random_resource()
+	if picked_resource:
+		distraction.set("distractionResource", picked_resource)
+	distractions_root.add_child(distraction)
+	distraction.global_position = _pick_spawn_position()
+	distraction.rotation_degrees = _rng.randf_range(min_spawn_rotation_degrees, max_spawn_rotation_degrees)
+	_schedule_next_spawn()
+
+
+func _pick_spawn_position() -> Vector2:
+	var rect := get_viewport().get_visible_rect().grow(-spawn_margin)
+	return Vector2(
+		_rng.randf_range(rect.position.x, rect.end.x),
+		_rng.randf_range(rect.position.y, rect.end.y)
+	)
+
+
+func _pick_random_resource() -> DistractionResource:
+	if distraction_resources.is_empty():
+		return null
+
+	var total_weight: float = 0.0
+	for resource in distraction_resources:
+		if resource:
+			total_weight += maxf(resource.spawnChancePercent, 0.0)
+
+	if total_weight <= 0.0:
+		var index: int = _rng.randi_range(0, distraction_resources.size() - 1)
+		return distraction_resources[index]
+
+	var roll: float = _rng.randf_range(0.0, total_weight)
+	var running_weight: float = 0.0
+	for resource in distraction_resources:
+		if not resource:
+			continue
+		running_weight += maxf(resource.spawnChancePercent, 0.0)
+		if roll <= running_weight:
+			return resource
+
+	return distraction_resources[distraction_resources.size() - 1]
