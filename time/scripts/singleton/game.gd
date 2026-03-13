@@ -13,6 +13,8 @@ var hand_state: HandState = HandState.WRITE
 var _forced_open_count: int = 0
 var _state_before_forced_open: HandState = HandState.WRITE
 
+var manuscript_title: String = ""
+
 
 func set_hand_state(new_state: HandState) -> void:
 	if new_state == hand_state:

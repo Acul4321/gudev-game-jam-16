@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://dav00au22sy1"]
+
+[ext_resource type="Script" uid="uid://yo53s7deues5" path="res://menu/main_menu.gd" id="1_f5okj"]
+[ext_resource type="Texture2D" uid="uid://b54tppy83b02k" path="res://menu/mainmenu.png" id="2_o5w3e"]
+
+[node name="MainMenu" type="Node2D" unique_id=67210729]
+script = ExtResource("1_f5okj")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1654831804]
+offset_right = 1159.1111
+offset_bottom = 652.0
+texture = ExtResource("2_o5w3e")
+expand_mode = 1
+
+[node name="UI" type="Control" parent="." unique_id=230058003]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=161064120]
+layout_mode = 0
+offset_left = 690.0
+offset_top = 135.0
+offset_right = 1090.0
+offset_bottom = 453.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer" unique_id=1834210760]
+layout_mode = 2
+
+[node name="manuscriptEdit" type="TextEdit" parent="UI/MarginContainer/VBoxContainer" unique_id=79916049]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 140)
+layout_mode = 2
+placeholder_text = "Enter the name of your manuscript"
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/MarginContainer/VBoxContainer" unique_id=2061426482]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+
+[node name="enterButton" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1755219261]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 130)
+layout_mode = 2
+text = "Enter Game
+"
