@@ -4,6 +4,7 @@ extends Node2D
 @export var distraction_resources: Array[DistractionResource] = [
 	preload("res://distractions/coffee_distraction.tres"),
 	preload("res://distractions/cat_distraction.tres"),
+	preload("res://distractions/phone_distraction.tres"),
 ]
 @export var min_spawn_interval: float = 4.0
 @export var max_spawn_interval: float = 8.0
