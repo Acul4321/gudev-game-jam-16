@@ -18,29 +18,25 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=161064120]
-layout_mode = 0
-offset_left = 690.0
-offset_top = 135.0
-offset_right = 1090.0
-offset_bottom = 453.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer" unique_id=1834210760]
-layout_mode = 2
-
-[node name="manuscriptEdit" type="TextEdit" parent="UI/MarginContainer/VBoxContainer" unique_id=79916049]
+[node name="manuscriptEdit" type="LineEdit" parent="UI" unique_id=551944911]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 140)
-layout_mode = 2
+layout_mode = 0
+offset_left = 718.0
+offset_top = 151.0
+offset_right = 1118.0
+offset_bottom = 291.0
+scale = Vector2(0.8576317, 0.8539385)
 placeholder_text = "Enter the name of your manuscript"
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/MarginContainer/VBoxContainer" unique_id=2061426482]
-custom_minimum_size = Vector2(0, 35)
-layout_mode = 2
-
-[node name="enterButton" type="Button" parent="UI/MarginContainer/VBoxContainer" unique_id=1755219261]
+[node name="enterButton" type="Button" parent="UI" unique_id=1755219261]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 130)
-layout_mode = 2
+layout_mode = 0
+offset_left = 716.0
+offset_top = 317.0
+offset_right = 1116.0
+offset_bottom = 447.0
+scale = Vector2(0.8657301, 0.9816411)
 text = "Enter Game
 "
