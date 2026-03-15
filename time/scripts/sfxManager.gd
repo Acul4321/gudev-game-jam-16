@@ -2,11 +2,17 @@ extends Node
 
 signal sfx_played(sfx_name: StringName)
 
-const SFX_DIR: String = "res://assets/sfx"
-const SUPPORTED_EXTENSIONS: PackedStringArray = ["wav", "ogg", "mp3"]
 const SFX_BUS: StringName = &"Sfx"
 const SFX_BUS_ALT: StringName = &"SFX"
 const MASTER_BUS: StringName = &"Master"
+
+const CLIPS: Dictionary = {
+	&"basePickup": preload("res://assets/sfx/basePickup.wav"),
+	&"catActive": preload("res://assets/sfx/catActive.wav"),
+	&"meow": preload("res://assets/sfx/meow.wav"),
+	&"pencil-scribble": preload("res://assets/sfx/pencil-scribble.wav"),
+	&"phoneRing": preload("res://assets/sfx/phoneRing.wav"),
+}
 
 @export_category("Settings")
 @export var bus: String = ""
@@ -18,13 +24,12 @@ var _next_player_idx: int = 0
 
 
 func _ready() -> void:
+	_clips = CLIPS.duplicate()
 	_setup_players()
-	reload_sfx()
 
 
 func reload_sfx() -> void:
-	_clips.clear()
-	_load_dir_recursive(SFX_DIR)
+	_clips = CLIPS.duplicate()
 
 
 func play(sfx_name: StringName, volume_db: float = 0.0, pitch_scale: float = 1.0) -> bool:
@@ -79,6 +84,7 @@ func _setup_players() -> void:
 	for player in _players:
 		if is_instance_valid(player):
 			player.queue_free()
+
 	_players.clear()
 	_next_player_idx = 0
 
@@ -98,31 +104,3 @@ func _resolve_bus() -> StringName:
 	if AudioServer.get_bus_index(SFX_BUS_ALT) != -1:
 		return SFX_BUS_ALT
 	return MASTER_BUS
-
-
-func _load_dir_recursive(dir_path: String) -> void:
-	var dir: DirAccess = DirAccess.open(dir_path)
-	if dir == null:
-		push_warning("SFX directory not found: %s" % dir_path)
-		return
-
-	for subdir: String in dir.get_directories():
-		_load_dir_recursive("%s/%s" % [dir_path, subdir])
-
-	for file_name: String in dir.get_files():
-		if not _is_supported_audio_file(file_name):
-			continue
-
-		var clip_path: String = "%s/%s" % [dir_path, file_name]
-		var stream: AudioStream = load(clip_path) as AudioStream
-		if stream == null:
-			push_warning("Could not load sfx clip: %s" % clip_path)
-			continue
-
-		var key: StringName = StringName(file_name.get_basename())
-		_clips[key] = stream
-
-
-func _is_supported_audio_file(file_name: String) -> bool:
-	var ext: String = file_name.get_extension().to_lower()
-	return SUPPORTED_EXTENSIONS.has(ext)

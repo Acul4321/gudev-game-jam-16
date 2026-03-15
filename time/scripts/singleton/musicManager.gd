@@ -13,11 +13,15 @@ signal stop_music
 signal pause_music
 signal resume_music
 
-const MUSIC_DIR: String = "res://assets/music"
-const SUPPORTED_EXTENSIONS: PackedStringArray = ["wav", "ogg", "mp3"]
 const MUSIC_BUS: StringName = &"Music"
 const MASTER_BUS: StringName = &"Master"
 const SILENT_DB: float = -40.0
+
+const TRACKS: Dictionary = {
+	&"Time Loop Main Menu": preload("res://assets/music/Time Loop Main Menu.wav"),
+	&"Time Loop In Game": preload("res://assets/music/Time Loop In Game.wav"),
+	&"Time Loop End Menu": preload("res://assets/music/Time Loop End Menu.wav"),
+}
 
 var is_crossfading: bool = false
 var is_looping_song: bool = false
@@ -41,9 +45,10 @@ var _crossfade_tween: Tween
 
 
 func _ready() -> void:
+	_tracks = TRACKS.duplicate()
+
 	_setup_players()
 	_setup_timer()
-	reload_tracks()
 
 	play_song.connect(_on_play_song)
 	play_playlist.connect(_on_play_playlist)
@@ -53,28 +58,7 @@ func _ready() -> void:
 
 
 func reload_tracks() -> void:
-	_tracks.clear()
-
-	var dir: DirAccess = DirAccess.open(MUSIC_DIR)
-	if dir == null:
-		push_warning("Music directory not found: %s" % MUSIC_DIR)
-		return
-
-	var files: PackedStringArray = dir.get_files()
-	files.sort()
-
-	for file_name: String in files:
-		if not _is_supported_audio_file(file_name):
-			continue
-
-		var track_path: String = "%s/%s" % [MUSIC_DIR, file_name]
-		var stream: AudioStream = load(track_path) as AudioStream
-		if stream == null:
-			push_warning("Could not load track: %s" % track_path)
-			continue
-
-		var key: StringName = StringName(file_name.get_basename())
-		_tracks[key] = stream
+	_tracks = TRACKS.duplicate()
 
 
 func play(track_name: StringName, loop: bool = true, volume_db: float = 0.0) -> bool:
@@ -320,8 +304,3 @@ func _resolve_bus() -> StringName:
 func _start_song_timer(stream: AudioStream, fade: float) -> void:
 	var length: float = maxf(stream.get_length() - fade, 0.01)
 	song_timer.start(length)
-
-
-func _is_supported_audio_file(file_name: String) -> bool:
-	var ext: String = file_name.get_extension().to_lower()
-	return SUPPORTED_EXTENSIONS.has(ext)
