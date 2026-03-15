@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://c06da6c0b51d0"]
+
+[ext_resource type="Script" uid="uid://bikh2vgok1qdb" path="res://menu/end_screen.gd" id="1_mddrf"]
+[ext_resource type="Texture2D" uid="uid://wje4wq5gwc0c" path="res://menu/endscreen.png" id="1_om4k0"]
+[ext_resource type="Texture2D" uid="uid://crgo5sxiot5v6" path="res://menu/A+.png" id="3_0s3qc"]
+
+[node name="EndScreen" type="Node2D" unique_id=2059316884]
+script = ExtResource("1_mddrf")
+
+[node name="bgTexture" type="TextureRect" parent="." unique_id=1707817193]
+offset_left = -46.0
+offset_top = -22.0
+offset_right = 1173.5555
+offset_bottom = 664.0
+texture = ExtResource("1_om4k0")
+expand_mode = 2
+
+[node name="returnButton" type="Button" parent="." unique_id=416695721]
+unique_name_in_owner = true
+offset_left = 794.0
+offset_top = 545.0
+offset_right = 1145.0
+offset_bottom = 636.0
+theme_override_font_sizes/font_size = 60
+text = "Return"
+
+[node name="manuscriptLabel" type="Label" parent="." unique_id=1326253393]
+unique_name_in_owner = true
+offset_left = 27.0
+offset_top = 15.0
+offset_right = 555.0
+offset_bottom = 70.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "if you see this, this is a bug!"
+
+[node name="gradeSprite" type="Sprite2D" parent="." unique_id=619976456]
+unique_name_in_owner = true
+position = Vector2(399.00003, 404.00003)
+scale = Vector2(0.3495371, 0.3495371)
+texture = ExtResource("3_0s3qc")
+
+[node name="totalScoreLabel" type="Label" parent="." unique_id=197240001]
+unique_name_in_owner = true
+offset_left = 800.0
+offset_top = 412.0
+offset_right = 1270.0
+offset_bottom = 451.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 28
+text = "Total Score: 0"
+
+[node name="pagesFilledLabel" type="Label" parent="." unique_id=197240002]
+unique_name_in_owner = true
+offset_left = 800.0
+offset_top = 449.0
+offset_right = 1270.0
+offset_bottom = 486.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "Pages Filled: 0"
+
+[node name="distractionsThrownLabel" type="Label" parent="." unique_id=197240003]
+unique_name_in_owner = true
+offset_left = 800.0
+offset_top = 480.0
+offset_right = 1270.0
+offset_bottom = 517.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "Distractions Thrown: 0"
