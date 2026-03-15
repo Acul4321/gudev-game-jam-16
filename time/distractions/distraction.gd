@@ -4,6 +4,11 @@ extends Area2D
 @export var throw_drag: float = 1200.0
 @export var offscreen_padding: float = 96.0
 @export var distractionResource: DistractionResource
+## How many seconds of mouse movement history to keep for computing throw velocity.
+@export var velocity_window: float = 0.08
+## Minimum throw speed — if the computed velocity is below this, the object gets
+## a gentle push toward the last direction of movement so it never feels "stuck".
+@export var min_throw_speed: float = 200.0
 
 @onready var sprite: Sprite2D = $Visual
 
@@ -13,8 +18,10 @@ var _grabbed: bool = false
 var _thrown: bool = false
 var _velocity: Vector2 = Vector2.ZERO
 var _grab_offset: Vector2 = Vector2.ZERO
-var _last_mouse_pos: Vector2 = Vector2.ZERO
-var _last_sample_time: float = 0.0
+
+# Velocity buffer — stores recent (timestamp, position) pairs so we can derive
+# a reliable average velocity even when the last frame has zero movement.
+var _position_samples: Array[Dictionary] = []
 
 
 func _ready() -> void:
@@ -24,7 +31,6 @@ func _ready() -> void:
 	_apply_before_active_sprite()
 	_apply_before_active_scale()
 	_play_before_active_sfx()
-	_monitor_throw_velocity(get_global_mouse_position())
 	var activation_delay: float = _get_activation_delay()
 	if activation_delay <= 0.0:
 		_activate()
@@ -37,7 +43,7 @@ func _process(delta: float) -> void:
 	if _grabbed:
 		var mouse_pos := get_global_mouse_position()
 		global_position = mouse_pos + _grab_offset
-		_monitor_throw_velocity(mouse_pos)
+		_record_sample(mouse_pos)
 		return
 
 	if _thrown:
@@ -63,7 +69,6 @@ func _input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Release throw even when the cursor is no longer over the collision shape.
 	if _grabbed and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 		_release_throw()
 
@@ -72,6 +77,41 @@ func _exit_tree() -> void:
 	if _activated:
 		Game.end_distraction_force_open()
 
+
+# ---------------------------------------------------------------------------
+# Velocity sampling
+# ---------------------------------------------------------------------------
+
+func _record_sample(pos: Vector2) -> void:
+	var now: float = Time.get_ticks_msec() / 1000.0
+	_position_samples.append({"t": now, "p": pos})
+	# Trim samples older than the window.
+	while _position_samples.size() > 1 and now - _position_samples[0]["t"] > velocity_window:
+		_position_samples.remove_at(0)
+
+
+func _compute_throw_velocity() -> Vector2:
+	if _position_samples.size() < 2:
+		return Vector2.ZERO
+
+	var oldest: Dictionary = _position_samples[0]
+	var newest: Dictionary = _position_samples[_position_samples.size() - 1]
+	var dt: float = newest["t"] - oldest["t"]
+	if dt < 0.001:
+		return Vector2.ZERO
+
+	var raw: Vector2 = (newest["p"] - oldest["p"]) / dt
+
+	# Guarantee a minimum throw speed so trackpad releases never feel dead.
+	if raw.length() < min_throw_speed and raw.length() > 0.01:
+		raw = raw.normalized() * min_throw_speed
+
+	return raw
+
+
+# ---------------------------------------------------------------------------
+# State changes
+# ---------------------------------------------------------------------------
 
 func _activate() -> void:
 	if _activated:
@@ -88,32 +128,30 @@ func _start_grab() -> void:
 	_grabbed = true
 	_thrown = false
 	_velocity = Vector2.ZERO
+	_position_samples.clear()
 	_apply_grabbing_sprite()
 	_apply_grabbing_scale()
 	_play_grabbing_sfx()
 	var mouse_pos := get_global_mouse_position()
 	_grab_offset = global_position - mouse_pos
-	_monitor_throw_velocity(mouse_pos)
+	_record_sample(mouse_pos)
 	Game.set_hand_grab()
 
 
 func _release_throw() -> void:
 	_grabbed = false
 	_thrown = true
+	_velocity = _compute_throw_velocity()
+	_position_samples.clear()
 	Game.register_distraction_thrown()
 	_apply_after_active_sprite()
 	_apply_after_active_scale()
 	Game.set_hand_open()
 
 
-func _monitor_throw_velocity(mouse_pos: Vector2) -> void:
-	var now: float = Time.get_ticks_msec() / 1000.0
-	if _last_sample_time > 0.0:
-		var dt: float = maxf(now - _last_sample_time, 0.001)
-		_velocity = (mouse_pos - _last_mouse_pos) / dt
-	_last_sample_time = now
-	_last_mouse_pos = mouse_pos
-
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
 
 func _is_outside_screen() -> bool:
 	var padded_rect := get_viewport().get_visible_rect().grow(offscreen_padding)
@@ -139,7 +177,6 @@ func _apply_after_active_sprite() -> void:
 func _apply_grabbing_sprite() -> void:
 	if not distractionResource:
 		return
-
 	if distractionResource.grabbingSprite:
 		sprite.texture = distractionResource.grabbingSprite
 	elif distractionResource.afterActiveSprite:
@@ -149,7 +186,6 @@ func _apply_grabbing_sprite() -> void:
 func _apply_before_active_scale() -> void:
 	if not distractionResource:
 		return
-
 	var factor: float = distractionResource.beforeActiveScaleFactor
 	if is_equal_approx(factor, 1.0):
 		factor = distractionResource.scaleFactor
@@ -159,7 +195,6 @@ func _apply_before_active_scale() -> void:
 func _apply_after_active_scale() -> void:
 	if not distractionResource:
 		return
-
 	var factor: float = distractionResource.afterActiveScaleFactor
 	if is_equal_approx(factor, 1.0):
 		factor = distractionResource.scaleFactor
@@ -169,7 +204,6 @@ func _apply_after_active_scale() -> void:
 func _apply_grabbing_scale() -> void:
 	if not distractionResource:
 		return
-
 	var factor: float = distractionResource.grabbingScaleFactor
 	if is_equal_approx(factor, 1.0):
 		if not is_equal_approx(distractionResource.afterActiveScaleFactor, 1.0):
@@ -194,12 +228,9 @@ func _play_after_active_sfx() -> void:
 func _play_grabbing_sfx() -> void:
 	if not distractionResource:
 		return
-
 	if not distractionResource.grabbingSfxName.is_empty():
 		_play_sfx_name(distractionResource.grabbingSfxName)
 		return
-
-	# Backward compatibility for older resources.
 	_play_sfx_name(distractionResource.pickupSfxName)
 
 
