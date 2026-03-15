@@ -26,6 +26,7 @@ var _has_ended: bool = false
 
 func _ready() -> void:
 	Music.play(&"Time Loop In Game", true, 0.0)
+	Game.reset_score()
 	_rng.randomize()
 	_start_countdown()
 	_schedule_next_spawn()

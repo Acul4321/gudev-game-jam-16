@@ -8,12 +8,41 @@ enum HandState {
 
 signal hand_state_changed(old_state: HandState, new_state: HandState)
 signal distraction_force_open_changed(is_forced_open: bool)
+signal score_changed(distractions_thrown: int, pages_filled: int, total_score: int)
 
 var hand_state: HandState = HandState.WRITE
 var _forced_open_count: int = 0
 var _state_before_forced_open: HandState = HandState.WRITE
 
 var manuscript_title: String = ""
+var distractions_thrown: int = 0
+var pages_filled: int = 0
+var score: int = 0
+
+
+func _update_score() -> void:
+	score = distractions_thrown + pages_filled
+	score_changed.emit(distractions_thrown, pages_filled, score)
+
+
+func reset_score() -> void:
+	distractions_thrown = 0
+	pages_filled = 0
+	_update_score()
+
+
+func register_distraction_thrown(amount: int = 1) -> void:
+	if amount <= 0:
+		return
+	distractions_thrown += amount
+	_update_score()
+
+
+func register_page_filled(amount: int = 1) -> void:
+	if amount <= 0:
+		return
+	pages_filled += amount
+	_update_score()
 
 
 func set_hand_state(new_state: HandState) -> void:

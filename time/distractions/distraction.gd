@@ -97,6 +97,7 @@ func _start_grab() -> void:
 func _release_throw() -> void:
 	_grabbed = false
 	_thrown = true
+	Game.register_distraction_thrown()
 	_apply_after_active_sprite()
 	_apply_after_active_scale()
 	Game.set_hand_open()
