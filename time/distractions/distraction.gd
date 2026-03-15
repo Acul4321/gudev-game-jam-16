@@ -23,6 +23,7 @@ func _ready() -> void:
 	_base_sprite_scale = sprite.scale
 	_apply_before_active_sprite()
 	_apply_before_active_scale()
+	_play_before_active_sfx()
 	_monitor_throw_velocity(get_global_mouse_position())
 	var activation_delay: float = _get_activation_delay()
 	if activation_delay <= 0.0:
@@ -79,6 +80,7 @@ func _activate() -> void:
 	Game.begin_distraction_force_open()
 	_apply_after_active_sprite()
 	_apply_after_active_scale()
+	_play_after_active_sfx()
 	sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 
@@ -88,6 +90,7 @@ func _start_grab() -> void:
 	_velocity = Vector2.ZERO
 	_apply_grabbing_sprite()
 	_apply_grabbing_scale()
+	_play_grabbing_sfx()
 	var mouse_pos := get_global_mouse_position()
 	_grab_offset = global_position - mouse_pos
 	_monitor_throw_velocity(mouse_pos)
@@ -174,3 +177,33 @@ func _apply_grabbing_scale() -> void:
 		else:
 			factor = distractionResource.scaleFactor
 	sprite.scale = _base_sprite_scale * factor
+
+
+func _play_before_active_sfx() -> void:
+	if not distractionResource:
+		return
+	_play_sfx_name(distractionResource.beforeActiveSfxName)
+
+
+func _play_after_active_sfx() -> void:
+	if not distractionResource:
+		return
+	_play_sfx_name(distractionResource.afterActiveSfxName)
+
+
+func _play_grabbing_sfx() -> void:
+	if not distractionResource:
+		return
+
+	if not distractionResource.grabbingSfxName.is_empty():
+		_play_sfx_name(distractionResource.grabbingSfxName)
+		return
+
+	# Backward compatibility for older resources.
+	_play_sfx_name(distractionResource.pickupSfxName)
+
+
+func _play_sfx_name(sfx_name: String) -> void:
+	if sfx_name.is_empty():
+		return
+	Sfx.play(StringName(sfx_name))
