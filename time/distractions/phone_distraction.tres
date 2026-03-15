@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="DistractionResource" format=3 uid="uid://dml5fega8qso4"]
+
+[ext_resource type="Script" uid="uid://cugrxakbx6pl4" path="res://distractions/distraction_resource.gd" id="1_2juyk"]
+[ext_resource type="Texture2D" uid="uid://m78usd5dhn24" path="res://distractions/assets/phoneringing.png" id="1_gi3xx"]
+[ext_resource type="Texture2D" uid="uid://blkup6ktb5wg3" path="res://distractions/assets/phone.png" id="2_2pglq"]
+
+[resource]
+script = ExtResource("1_2juyk")
+beforeActiveSprite = ExtResource("2_2pglq")
+afterActiveSprite = ExtResource("1_gi3xx")
+grabbingSprite = ExtResource("2_2pglq")
+afterActiveSfxName = "phoneRing"
+grabbingSfxName = "basePickup"
+pickupSfxName = "basePickup"
+spawnChancePercent = 98.0
+scaleFactor = 0.4
+beforeActiveScaleFactor = 0.4
+afterActiveScaleFactor = 0.4
+grabbingScaleFactor = 0.4
+metadata/_custom_type_script = "uid://cugrxakbx6pl4"
