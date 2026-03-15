@@ -22,13 +22,17 @@ buses/default_bus_layout="uid://snxmuuv00pxy"
 [autoload]
 
 Game="*uid://dhhpitrq87eol"
-Music="*uid://d4rrrahfajt4"
 Sfx="*uid://147oksdv3mdf"
+Music="*res://scripts/singleton/musicManager.gd"
 
 [display]
 
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
+
+[editor]
+
+version_control/autoload_on_startup=true
 
 [physics]
 
