@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="time"
-run/main_scene="uid://c1lojw0uh2ou4"
+run/main_scene="uid://dav00au22sy1"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -24,6 +24,11 @@ buses/default_bus_layout="uid://snxmuuv00pxy"
 Game="*uid://dhhpitrq87eol"
 Music="*uid://d4rrrahfajt4"
 Sfx="*uid://147oksdv3mdf"
+
+[display]
+
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
 
 [physics]
 

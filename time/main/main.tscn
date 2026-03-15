@@ -3,11 +3,42 @@
 [ext_resource type="Script" uid="uid://wn86k2ccc14f" path="res://main/main.gd" id="1_47fuf"]
 [ext_resource type="PackedScene" uid="uid://bektemtaxqknj" path="res://manuscript/manuscript.tscn" id="1_53q0u"]
 [ext_resource type="PackedScene" uid="uid://62nsvu2nthbi" path="res://hand/hand.tscn" id="2_pjrb6"]
+[ext_resource type="Texture2D" uid="uid://dmb6c03r4mg0a" path="res://main/timer.png" id="4_3wy1v"]
+[ext_resource type="Texture2D" uid="uid://drxgs2cs6fayg" path="res://main/table.png" id="4_c651c"]
 
 [node name="Main" type="Node2D" unique_id=2132668939]
 script = ExtResource("1_47fuf")
 
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1707801409]
+offset_right = 1224.8889
+offset_bottom = 689.0
+texture = ExtResource("4_c651c")
+expand_mode = 1
+
 [node name="Manuscript" parent="." unique_id=1498770907 instance=ExtResource("1_53q0u")]
+
+[node name="timerSprite" type="Sprite2D" parent="." unique_id=629583237]
+position = Vector2(189, 95)
+scale = Vector2(0.1148148, 0.1148148)
+texture = ExtResource("4_3wy1v")
+
+[node name="digit1" type="Label" parent="timerSprite" unique_id=1785866850]
+unique_name_in_owner = true
+offset_left = -731.613
+offset_top = -365.80652
+offset_right = -139.3548
+offset_bottom = 316.19348
+theme_override_font_sizes/font_size = 500
+text = "1"
+
+[node name="digit2" type="Label" parent="timerSprite" unique_id=270573991]
+unique_name_in_owner = true
+offset_left = 26.129028
+offset_top = -365.8065
+offset_right = 600.9678
+offset_bottom = 316.1935
+theme_override_font_sizes/font_size = 500
+text = "0"
 
 [node name="Distractions" type="Node2D" parent="." unique_id=1589002880]
 unique_name_in_owner = true

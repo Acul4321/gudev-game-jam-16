@@ -125,6 +125,7 @@ var pages: int = 0
 
 func _complete_page():
 	pages += 1
+	Game.register_page_filled()
 	is_drawing = false
 	last_fill_pos = Vector2(-1, -1)
 	
